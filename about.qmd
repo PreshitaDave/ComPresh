@@ -1,19 +1,20 @@
 ---
 title: "About"
-image: profile.jpg
+image: Image.jpg
 about:
   template: jolla
   links:
     - icon: twitter
       text: Twitter
-      href: https://twitter.com
+      href: https://twitter.com/DavePreshita
     - icon: linkedin
       text: LinkedIn
-      href: https://linkedin.com
+      href: https://linkedin.com/in/preshitadave
     - icon: github
       text: Github
-      href: https://github.com
-
+      href: https://github.com/PreshitaDave
 ---
 
-About this blog
+About this blog:
+
+This blog is maintained by Preshita Dave, a Bioinformatician at Massachusetts General Brigham. She completed her Masters in Bioinformatics in 2023. She intends to publish code to understand concepts in Bioinformatics that are frequently used by analysts.
