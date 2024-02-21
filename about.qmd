@@ -15,6 +15,4 @@ about:
       href: https://github.com/PreshitaDave
 ---
 
-About this blog:
-
 This blog is maintained by Preshita Dave, a Bioinformatician at Massachusetts General Brigham. She completed her Masters in Bioinformatics in 2023. She intends to publish code to understand concepts in Bioinformatics that are frequently used by analysts.
