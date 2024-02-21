@@ -9,7 +9,7 @@
 <meta name="author" content="Presh">
 <meta name="dcterms.date" content="2024-02-10">
 
-<title>ComPresh - PCA in Action</title>
+<title>ComPresh - PCA Concept</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -168,7 +168,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">PCA in Action</h1>
+      <h1 class="title">PCA Concept</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">code</div>
                 <div class="quarto-category">analysis</div>
@@ -207,9 +207,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<p>Welcome to my first post! I thought of starting of with basics and revising PCA (Principal Component Analysis) since it is an important concept.</p>
+<p>Welcome to my first computational post! I thought of starting of with basics and revising PCA (Principal Component Analysis) since it is an important concept.</p>
 <p>To get a better understanding, watch StatQuest videos by Josh Starmer:</p>
 <p><a href="https://www.youtube.com/watch?v=FgakZw6K1QQ">PCA Step by Step</a></p>
+<p>Extra reading: <a href="http://www.cs.otago.ac.nz/cosc453/student_tutorials/principal_components.pdf">Lindsay Smith post</a></p>
+<p>Useful link for R beginners: <a href="https://rc2e.com">R cookbook</a></p>
 <p>I’m going to go step by step and see how I can make this by myself and also then use packages to give a real life example.</p>
 <p>PCA finds the best fitted line by maximizing the sum of the squared distances (SS distance) from the projected points to the origin. The distances are squared so the negative values don’t cancel out the positive values.</p>
 <p>In practice, the number of PCs is either the number of variables or the number of samples, whichever is smallest.</p>
@@ -217,7 +219,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Usually, PC1 and PC2 have the highest eigenvalues, so we rotate the axes until PC1 is horizontal and PC2 is vertical. Then you can project points from PC1 and PC2 to get the samples.</p>
 <p>Let’s make our sample data. I’m going to make 6 samples with 5 genes expression data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(deming)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">Samp1 =</span> <span class="fu">c</span>(<span class="dv">14</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">7</span>,<span class="dv">3</span>),</span>
@@ -271,6 +274,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>integer(0)</code></pre>
+</div>
+</div>
+<p>We now need to understand the difference between Ordinary Least squares (linear regression) and total least squares (orthogonal regression).</p>
+<p><img src="images/linear_ortho_regression.png" class="img-fluid"></p>
+<p>Orthogonal regression</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">deming</span>(centered_y <span class="sc">~</span> centered_x)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(centered_x, centered_y, <span class="at">xlim =</span> new_x_range, <span class="at">ylim =</span> new_y_range, <span class="at">main =</span> <span class="st">"Orthogonal regression"</span>, <span class="at">xlab =</span> <span class="st">"X"</span>, <span class="at">ylab =</span> <span class="st">"Y"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(model, <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Linear regression</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(centered_y <span class="sc">~</span> centered_x)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(centered_x, centered_y, <span class="at">xlim =</span> new_x_range, <span class="at">ylim =</span> new_y_range, <span class="at">main =</span> <span class="st">"Linear Regression"</span>, <span class="at">xlab =</span> <span class="st">"X"</span>, <span class="at">ylab =</span> <span class="st">"Y"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(model, <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Calculate the covariance matrix</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cov_matrix <span class="ot">&lt;-</span> <span class="fu">cov</span>(data)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>eigen_result <span class="ot">&lt;-</span> <span class="fu">eigen</span>(cov_matrix)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>largest_eigenvector <span class="ot">&lt;-</span> eigen_result<span class="sc">$</span>vectors[, <span class="fu">which.max</span>(eigen_result<span class="sc">$</span>values)]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>pca_scores <span class="ot">&lt;-</span> data <span class="sc">%*%</span> largest_eigenvector</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data, <span class="at">main =</span> <span class="st">"Data and Principal Component"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="dv">0</span>, <span class="at">b =</span> largest_eigenvector[<span class="dv">2</span>] <span class="sc">/</span> largest_eigenvector[<span class="dv">1</span>], <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 
